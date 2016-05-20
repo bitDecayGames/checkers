@@ -7,15 +7,18 @@ import com.bitdecay.board.utils.GameBoardException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
-public final class Checkerboard implements GameBoardState{
+public final class Checkerboard implements GameBoardState {
     private static final String BLACK = "#########";
     private static final String WHITE = "         ";
     private static final String CORNER_SEPARATOR = "+";
     private static final String HORIZONTAL_SEPARATOR = "---------";
     private static final String VERTICAL_SEPARATOR = "|";
 
-    private int size;
+    public int size;
+    public Team currentTurn = Team.WHITE;
+    public Piece lastPieceToMove = null;
     private List<Piece> pieces = new ArrayList<>();
 
     public Checkerboard(int size){
@@ -25,7 +28,7 @@ public final class Checkerboard implements GameBoardState{
 
         for (int i = 0; i < size; i++){
             Piece a = new Piece();
-            a.team = Team.A;
+            a.team = Team.WHITE;
             a.alive = true;
             a.id = i + 1;
             a.king = false;
@@ -33,7 +36,7 @@ public final class Checkerboard implements GameBoardState{
             a.y = i % 2;
             pieces.add(a);
             Piece b = new Piece();
-            b.team = Team.B;
+            b.team = Team.BLACK;
             b.alive = true;
             b.id = i + 1;
             b.king = false;
@@ -92,14 +95,35 @@ public final class Checkerboard implements GameBoardState{
 
     @Override
     public Object clone(){
-        return null;
+        Checkerboard b = new Checkerboard(size);
+        b.currentTurn = currentTurn;
+        Optional<Piece> optLastPieceToMove = b.getPieceWithId(lastPieceToMove.team, lastPieceToMove.id);
+        if (optLastPieceToMove.isPresent()) b.lastPieceToMove = optLastPieceToMove.get();
+        stream().forEach(a -> {
+            Optional<Piece> optPiece = b.getPieceWithId(a.team, a.id);
+            if (optPiece.isPresent()) {
+                Piece piece = optPiece.get();
+                piece.x = a.x;
+                piece.y = a.y;
+                piece.king = a.king;
+                piece.alive = a.alive;
+            }
+        });
+        return b;
     }
 
     @Override
     public String toString(){ return serialize(); }
 
     public Optional<Piece> getPieceAt(int x, int y){
-        for (Piece p : pieces) if (p.x == x && p.y == y) return Optional.of(p);
-        return Optional.empty();
+        return stream().filter(p -> p.x == x && p.y == y).sorted((a, b) -> (a.alive ? 1 : -1)).findFirst();
+    }
+
+    public Optional<Piece> getPieceWithId(Team team, int id){
+        return stream().filter(p -> p.id == id && p.team == team).findFirst();
+    }
+
+    public Stream<Piece> stream(){
+        return pieces.stream();
     }
 }

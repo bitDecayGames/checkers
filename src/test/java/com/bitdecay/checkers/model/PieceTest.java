@@ -3,7 +3,7 @@ package com.bitdecay.checkers.model;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestPiece {
+public class PieceTest {
 
     @Test
     public void testPieceSerialization(){
@@ -15,7 +15,7 @@ public class TestPiece {
         b.deserialize(a.serialize());
         Assert.assertTrue(eq(a, b));
 
-        a.team = Team.B;
+        a.team = Team.BLACK;
         System.out.println(a);
         b.deserialize(a.serialize());
         Assert.assertTrue(eq(a, b));

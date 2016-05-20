@@ -5,7 +5,7 @@ import com.bitdecay.board.utils.Serializable;
 
 public class Piece implements Serializable<Piece> {
     public int id = 0;
-    public Team team = Team.A;
+    public Team team = Team.WHITE;
     public boolean king = false;
     public boolean alive = false;
     public int x = 0;
@@ -15,11 +15,11 @@ public class Piece implements Serializable<Piece> {
     @Override
     public String serialize() {
         switch (team){
-            case A:
+            case WHITE:
                 return "  /`" + id + "`\\  \n" +
                         " |" + (king ? "  K  " : "     ") + "| \n" +
                         "  \\.../  ";
-            case B:
+            case BLACK:
                 return "  /=" + id + "=\\  \n" +
                         " |" + (king ? "# K #" : "&&&&&") + "| \n" +
                         "  \\&&&/  ";
@@ -29,14 +29,14 @@ public class Piece implements Serializable<Piece> {
 
     @Override
     public Piece deserialize(String s) {
-        team = s.contains("&") ? Team.B : Team.A;
+        team = s.contains("&") ? Team.BLACK : Team.WHITE;
         king = s.contains("K");
         alive = true;
         switch (team){
-            case A:
+            case WHITE:
                 id = Integer.parseInt(s.split("`")[1]);
                 break;
-            case B:
+            case BLACK:
                 id = Integer.parseInt(s.split("=")[1]);
                 break;
         }
