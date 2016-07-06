@@ -7,6 +7,7 @@ import com.bitdecay.board.utils.GameBoardException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class Checkerboard implements GameBoardState {
@@ -19,7 +20,9 @@ public final class Checkerboard implements GameBoardState {
     public int size;
     public Team currentTurn = Team.WHITE;
     public Piece lastPieceToMove = null;
-    private List<Piece> pieces = new ArrayList<>();
+    public List<Piece> pieces = new ArrayList<>();
+    public boolean gameOver = false;
+    public Team winner = null;
 
     public Checkerboard(int size){
         if (size < 6) throw new GameBoardException("Game board must be at least 6x6");
@@ -89,15 +92,14 @@ public final class Checkerboard implements GameBoardState {
 
     @Override
     public GameBoardState deserialize(String s) {
-        String[] lines = s.split("\n");
-        return null;
+        throw new UnsupportedOperationException("Have not implemented checkerboard deserializer");
     }
 
     @Override
     public Object clone(){
         Checkerboard b = new Checkerboard(size);
         b.currentTurn = currentTurn;
-        Optional<Piece> optLastPieceToMove = b.getPieceWithId(lastPieceToMove.team, lastPieceToMove.id);
+        Optional<Piece> optLastPieceToMove = (lastPieceToMove != null ? b.getPieceWithId(lastPieceToMove.team, lastPieceToMove.id) : Optional.empty());
         if (optLastPieceToMove.isPresent()) b.lastPieceToMove = optLastPieceToMove.get();
         stream().forEach(a -> {
             Optional<Piece> optPiece = b.getPieceWithId(a.team, a.id);
@@ -125,5 +127,9 @@ public final class Checkerboard implements GameBoardState {
 
     public Stream<Piece> stream(){
         return pieces.stream();
+    }
+
+    public List<Piece> getPiecesFromTeam(Team team){
+        return stream().filter(piece -> piece.team == team).collect(Collectors.toList());
     }
 }
