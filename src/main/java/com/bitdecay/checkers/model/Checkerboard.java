@@ -59,7 +59,7 @@ public final class Checkerboard implements GameBoardState {
             for (int x = 0; x < size; x++){
                 if ((y + x) % 2 == 0){
                     Optional<Piece> piece = getPieceAt(x, y);
-                    if (piece.isPresent()){
+                    if (piece.isPresent() && piece.get().alive){
                         String[] splitPiece = piece.get().serialize().split("\n");
                         line1.append(splitPiece[0]);
                         line2.append(splitPiece[1]);
@@ -111,6 +111,8 @@ public final class Checkerboard implements GameBoardState {
                 piece.alive = a.alive;
             }
         });
+        b.gameOver = gameOver;
+        b.winner = winner;
         return b;
     }
 
@@ -119,6 +121,10 @@ public final class Checkerboard implements GameBoardState {
 
     public Optional<Piece> getPieceAt(int x, int y){
         return stream().filter(p -> p.x == x && p.y == y).sorted((a, b) -> (a.alive ? 1 : -1)).findFirst();
+    }
+
+    public Optional<Piece> getJumpedPieceAt(Piece jumper, MoveDirection direction){
+        return getPieceAt(jumper.x + direction.x(), jumper.y + direction.y());
     }
 
     public Optional<Piece> getPieceWithId(Team team, int id){
