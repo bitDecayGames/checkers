@@ -7,9 +7,31 @@ public class Piece implements Serializable<Piece> {
     public int id = 0;
     public Team team = Team.WHITE;
     public boolean king = false;
-    public boolean alive = false;
+    public boolean alive = true;
     public int x = 0;
     public int y = 0;
+
+
+    public Piece setTeam(Team team){
+        this.team = team;
+        return this;
+    }
+
+    public Piece setPosition(int x, int y){
+        this.x = x;
+        this.y = y;
+        return this;
+    }
+
+    public Piece setAlive(boolean alive){
+        this.alive = alive;
+        return this;
+    }
+
+    public Piece setKing(boolean king){
+        this.king = king;
+        return this;
+    }
 
 
     @Override

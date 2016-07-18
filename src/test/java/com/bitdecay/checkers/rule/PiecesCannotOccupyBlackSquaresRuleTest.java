@@ -10,11 +10,12 @@ import java.util.Optional;
 
 public class PiecesCannotOccupyBlackSquaresRuleTest {
 
+    private PiecesCannotOccupyBlackSquaresRule rule = new PiecesCannotOccupyBlackSquaresRule();
+
     @Test
     public void testPiecesCannotOccupyBlackSquaresRulePass(){
         Checkerboard a = new Checkerboard(6);
         Checkerboard b = new Checkerboard(6);
-        PiecesCannotOccupyBlackSquaresRule rule = new PiecesCannotOccupyBlackSquaresRule();
         Assert.assertTrue(rule.apply(a, b, null));
     }
 
@@ -25,7 +26,6 @@ public class PiecesCannotOccupyBlackSquaresRuleTest {
         Optional<Piece> piece = b.getPieceAt(0, 0);
         if (piece.isPresent()) piece.get().x += 1;
         else throw new GameBoardException("There should have been a piece at (0, 0)");
-        PiecesCannotOccupyBlackSquaresRule rule = new PiecesCannotOccupyBlackSquaresRule();
         Assert.assertFalse(rule.apply(a, b, null));
     }
 }

@@ -14,7 +14,7 @@ public class KingMeCondition extends Condition<Checkerboard, KingMeAction> {
     @Override
     public boolean check(Checkerboard previous, Checkerboard current) {
         Optional<Piece> piece = current.stream().filter(p -> (p.team == Team.BLACK && p.y == 0) || (p.team == Team.WHITE && p.y == current.size - 1)).findFirst();
-        if (piece.isPresent()) action.setPiece(piece.get());
+        piece.ifPresent(p -> action.setPiece(p));
         return piece.isPresent();
     }
 

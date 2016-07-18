@@ -11,7 +11,7 @@ public class WinCondition extends Condition<Checkerboard, WinAction> {
 
     @Override
     public boolean check(Checkerboard previous, Checkerboard current) {
-        if (!previous.gameOver && current.gameOver) {
+        if (!previous.gameOver && !current.gameOver) {
             boolean blackTeamAlive = false;
             boolean whiteTeamAlive = false;
             for (Piece piece : current.pieces) {

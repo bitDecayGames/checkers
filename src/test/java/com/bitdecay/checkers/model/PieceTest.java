@@ -11,17 +11,14 @@ public class PieceTest {
         Piece b = new Piece();
 
         a.id = 2;
-        System.out.println(a);
         b.deserialize(a.serialize());
         Assert.assertTrue(eq(a, b));
 
         a.team = Team.BLACK;
-        System.out.println(a);
         b.deserialize(a.serialize());
         Assert.assertTrue(eq(a, b));
 
         a.king = true;
-        System.out.println(a);
         b.deserialize(a.serialize());
         Assert.assertTrue(eq(a, b));
     }
